@@ -30,7 +30,7 @@
 - [Seeed-Studio SAMD core](https://github.com/Seeed-Studio/ArduinoCore-samd)
 - [Sparkfun SAMD core](https://github.com/sparkfun/Arduino_Boards)
 - [Industruino SAMD core](https://github.com/Industruino/IndustruinoSAMD)
-- [Industruino SAMx core](https://github.com/Industruino/IndustruinoSAMx)
+
 
 
 ---

@@ -70,17 +70,17 @@
 
 ### Features
 
-This hardware-based PWM library enables you to use Hardware-PWM on **SAMD21/SAMD51 boards** such as `NANO_33_IOT`, `ITSYBITSY_M4`, `SEEED_XIAO_M0`, `SparkFun SAMD51_Thing_Plus`, etc., to create and output PWM. These purely hardware-based PWM channels can generate very high PWM frequencies, depending on CPU clock and acceptable accuracy. The maximum resolution can be 20-bit with very low frequencies. Normally 8, 12 or 16-bit resolution is good enough.
+This hardware-based PWM library enables you to use Hardware-PWM on **SAMD21/SAMD51 boards** such as `NANO_33_IOT`, `ITSYBITSY_M4`, `SEEED_XIAO_M0`, `SparkFun SAMD51_Thing_Plus`, etc., to create and output PWM. These purely hardware-based PWM channels can generate very high PWM frequencies, depending on CPU clock and acceptable accuracy. The maximum resolution can be **16-bit** for better accuracy when using Timer `TCCx`. With Timer `TCx`, only **8-bit** resolution is supported with lower accuracy.
 
 ---
 
 The most important feature is they're purely hardware-based PWM channels. Therefore, their operations are **not blocked by bad-behaving software functions / tasks**.
 
-This important feature is absolutely necessary for mission-critical tasks. These hardware PWM-channels, still work even if other software functions are blocking. Moreover, they are much more precise (certainly depending on clock frequency accuracy) than other software timers using millis() or micros(). That's necessary if you need to control external systems (Servo, etc.) requiring better accuracy.
+This important feature is absolutely necessary for mission-critical tasks. These hardware PWM-channels, still work even if other software functions are blocking. Moreover, they are much more precise (certainly depending on clock frequency accuracy) than other software timers using `millis()` or `micros()`. That's necessary if you need to control external systems (Servo, etc.) requiring better accuracy.
 
 New efficient `setPWM_manual()` function enables waveform creation using PWM.
 
-The [**PWM_Multi**](examples/PWM_Multi) example will demonstrate the usage of multichannel PWM using multiple Hardware-PWM blocks (slices). The 4 independent Hardware-PWM channels are used **to control 4 different PWM outputs**, with totally independent frequencies and dutycycles on `SAMD21/SAMD51`.
+The [**PWM_Multi**](examples/PWM_Multi) example will demonstrate the usage of multichannel PWM using multiple Hardware-PWM blocks (Timer & Channel). The 4 independent Hardware-PWM channels are used **to control 4 different PWM outputs**, with totally independent frequencies and dutycycles on `SAMD21/SAMD51`.
 
 Being hardware-based PWM, their executions are not blocked by bad-behaving functions / tasks, such as connecting to WiFi, Internet or Blynk services.
 
@@ -90,7 +90,7 @@ This non-being-blocked important feature is absolutely necessary for mission-cri
 
 ### Why using hardware-based PWM is better
 
-Imagine you have a system with a **mission-critical** function, controlling a robot or doing something much more important. You normally use a software timer to poll, or even place the function in loop(). But what if another function is **blocking** the loop() or setup().
+Imagine you have a system with a **mission-critical** function, controlling a robot or doing something much more important. You normally use a software timer to poll, or even place the function in `loop()`. But what if another function is **blocking** the `loop()` or `setup()`.
 
 So your function **might not be executed, and the result would be disastrous.**
 
@@ -98,9 +98,9 @@ You'd prefer to have your function called, no matter what happening with other f
 
 The correct choice is to use `hardware-based PWM`.
 
-These hardware-based PWM channels still work even if other software functions are blocking. Moreover, they are much more **precise** (certainly depending on clock frequency accuracy) than other software-based PWMs, using millis() or micros().
+These hardware-based PWM channels still work even if other software functions are blocking. Moreover, they are much more **precise** (certainly depending on clock frequency accuracy) than other software-based PWMs, using `millis()` or `micros()`.
 
-Functions using normal software-based PWMs, relying on loop() and calling millis(), won't work if the `loop()` or `setup()` is blocked by certain operation. For example, certain function is blocking while it's connecting to WiFi or some services.
+Functions using normal software-based PWMs, relying on `loop()` and calling `millis()`, won't work if the `loop()` or `setup()` is blocked by certain operation. For example, certain function is blocking while it's connecting to WiFi or some services.
 
 ---
 
@@ -123,7 +123,9 @@ Functions using normal software-based PWMs, relying on loop() and calling millis
  2. [`Arduino SAMD core 1.8.13+`](https://github.com/arduino/ArduinoCore-samd) for SAMD ARM Cortex-M0+ boards. [![GitHub release](https://img.shields.io/github/release/arduino/ArduinoCore-samd.svg)](https://github.com/arduino/ArduinoCore-samd/releases/latest)
  3. [`Adafruit SAMD core 1.7.11+`](https://github.com/adafruit/ArduinoCore-samd) for SAMD ARM Cortex-M0+ and M4 boards (Nano 33 IoT, etc.). [![GitHub release](https://img.shields.io/github/release/adafruit/ArduinoCore-samd.svg)](https://github.com/adafruit/ArduinoCore-samd/releases/latest)
  4. [`Seeeduino SAMD core 1.8.3+`](https://github.com/Seeed-Studio/ArduinoCore-samd) for SAMD21/SAMD51 boards (XIAO M0, Wio Terminal, etc.). [![Latest release](https://img.shields.io/github/release/Seeed-Studio/ArduinoCore-samd.svg)](https://github.com/Seeed-Studio/ArduinoCore-samd/releases/latest/)
- 5. [`Sparkfun SAMD core 1.8.3+`](https://github.com/sparkfun/Arduino_Boards) for SAMD21/SAMD51 boards (SparkFun_RedBoard_Turbo, SparkFun_SAMD51_Thing_Plus, etc.).
+ 5. [`Sparkfun SAMD core 1.8.3+`](https://github.com/sparkfun/Arduino_Boards) for SAMD21/SAMD51 boards (SparkFun_RedBoard_Turbo, SparkFun_SAMD51_Thing_Plus, etc.)
+ 6. [Industruino SAMD core](https://github.com/Industruino/IndustruinoSAMD) for SAMD21/SAMD51 boards
+
   
    
 ---
