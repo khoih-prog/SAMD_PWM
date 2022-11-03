@@ -11,8 +11,6 @@
 
 ## Table of Contents
 
-## Table of Contents
-
 * [Changelog](#changelog)
   * [Releases v1.0.0](#releases-v100)
 
