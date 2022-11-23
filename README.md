@@ -6,8 +6,11 @@
 [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](#Contributing)
 [![GitHub issues](https://img.shields.io/github/issues/khoih-prog/SAMD_PWM.svg)](http://github.com/khoih-prog/SAMD_PWM/issues)
 
+
 <a href="https://www.buymeacoffee.com/khoihprog6" title="Donate to my libraries using BuyMeACoffee"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Donate to my libraries using BuyMeACoffee" style="height: 50px !important;width: 181px !important;" ></a>
 <a href="https://www.buymeacoffee.com/khoihprog6" title="Donate to my libraries using BuyMeACoffee"><img src="https://img.shields.io/badge/buy%20me%20a%20coffee-donate-orange.svg?logo=buy-me-a-coffee&logoColor=FFDD00" style="height: 20px !important;width: 200px !important;" ></a>
+<a href="https://profile-counter.glitch.me/khoih-prog/count.svg" title="Total khoih-prog Visitor count"><img src="https://profile-counter.glitch.me/khoih-prog/count.svg" style="height: 30px;width: 200px;"></a>
+<a href="https://profile-counter.glitch.me/khoih-prog-SAMD_PWM/count.svg" title="SAMD_PWM Visitor count"><img src="https://profile-counter.glitch.me/khoih-prog-SAMD_PWM/count.svg" style="height: 30px;width: 200px;"></a>
 
 ---
 ---
@@ -279,7 +282,7 @@ This file must be copied into the directory:
 
 Before using any PWM `Timer` and `channel`, you have to make sure the `Timer` and `channel` has not been used by any other purpose.
 
-```
+```cpp
 // Not OK for Nano_33_IoT (0, 1, 7, 8, 13, 14, 15 )
 // OK for Nano_33_IoT (2, 3, 4, 5, 6, 9, 10, 11, 12, 16, 17)
 // TCC OK => pin 4, 5, 6, 8, 9, 10, 11, 16/A2, 17/A3
@@ -407,7 +410,7 @@ https://github.com/khoih-prog/SAMD_PWM/blob/aec5386c6bca3239de15f8e8053cad87f18b
 The following is the sample terminal output when running example [PWM_DynamicDutyCycle](examples/PWM_DynamicDutyCycle) on **SAMD21 SAMD_NANO_33_IOT**, to demonstrate the ability to provide high PWM frequencies and ability to change DutyCycle `on-the-fly` using **TCC** timer for 16-bit PWM
 
 
-```
+```cpp
 Starting PWM_DynamicDutyCycle on SAMD_NANO_33_IOT
 SAMD_PWM v1.0.0
 [PWM] calcTCCPrescaler: OK pin = 11 , period = 200 , _prescaler = 1 , F_CPU = 48000000
@@ -448,7 +451,7 @@ Actual data: pin = 11, PWM DC = 90.00, PWMPeriod = 200.00, PWM Freq (Hz) = 5000.
 
 The following is the sample terminal output when running example [**PWM_Multi**](examples/PWM_Multi) on **SAMD21 SAMD_NANO_33_IOT**, to demonstrate the ability to provide high PWM frequencies on multiple `PWM-capable` pins using **TCC** timer for 16-bit PWM
 
-```
+```cpp
 Starting PWM_Multi on SAMD_NANO_33_IOT
 SAMD_PWM v1.0.0
 [PWM] calcTCCPrescaler: OK pin = 4 , period = 500 , _prescaler = 1 , F_CPU = 48000000
@@ -498,7 +501,7 @@ Actual data: pin = 12, PWM DC = 90.00, PWMPeriod = 125.00, PWM Freq (Hz) = 8000.
 
 The following is the sample terminal output when running example [**PWM_DynamicFreq**](examples/PWM_DynamicFreq) on **SAMD51 ITSYBITSY_M4**, to demonstrate the ability to change dynamically PWM frequencies on SAMD51 using **TCC** timer for 16-bit PWM
 
-```
+```cpp
 Starting PWM_DynamicFreq on ITSYBITSY_M4
 SAMD_PWM v1.0.0
 [PWM] calcTCCPrescaler: OK pin = 11 , period = 100 , _prescaler = 1 , F_CPU = 120000000
@@ -539,7 +542,7 @@ Actual data: pin = 11, PWM DC = 50.00, PWMPeriod = 100.00, PWM Freq (Hz) = 10000
 The following is the sample terminal output when running example [**PWM_Waveform**](examples/PWM_Waveform) on **SAMD51 ITSYBITSY_M4**, to demonstrate how to use the `setPWM_manual()` function in wafeform creation using **TCC** timer for 16-bit PWM
 
 
-```
+```cpp
 Starting PWM_Waveform on ITSYBITSY_M4
 SAMD_PWM v1.0.0
 [PWM] calcTCCPrescaler: OK pin = 11 , period = 1000 , _prescaler = 1 , F_CPU = 120000000
@@ -640,7 +643,7 @@ Actual data: pin = 11, PWM DutyCycle = 0.00, PWMPeriod = 1000.00, PWM Freq (Hz) 
 The following is the sample terminal output when running example [**PWM_Basic**](examples/PWM_Basic) on **SAMD51 ITSYBITSY_M4**, to demonstrate how to use the basic function, using **TC** timer for 8-bit PWM
 
 
-```
+```cpp
 Starting PWM_Basic on ITSYBITSY_M4
 SAMD_PWM v1.0.0
 [PWM] calcTCPrescaler: OK pin = 24 , period = 1000 , _prescaler = 1 , F_CPU = 120000000
@@ -681,7 +684,7 @@ SAMD_PWM v1.0.0
 
 The following is the sample terminal output when running example [**PWM_Basic**](examples/PWM_Basic) on **SAMD21 SAMD_NANO_33_IOT**, to demonstrate how to use the basic function, using **TC** timer for 8-bit PWM
 
-```
+```cpp
 Starting PWM_Basic on SAMD_NANO_33_IOT
 SAMD_PWM v1.0.0
 [PWM] calcTCPrescaler: OK pin = 12 , period = 1000 , _prescaler = 1 , F_CPU = 48000000
@@ -787,6 +790,6 @@ If you want to contribute to this project:
 
 ## Copyright
 
-Copyright 2022- Khoi Hoang
+Copyright (c) 2022- Khoi Hoang
 
 

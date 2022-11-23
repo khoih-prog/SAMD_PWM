@@ -859,6 +859,7 @@ class SAMD_PWM
         return false;
 
 #if defined(__SAMD51__)
+
       // Check which timer to use
       if (_tcNum >= TCC_INST_NUM)
       {
@@ -868,7 +869,7 @@ class SAMD_PWM
         //TCx->COUNT8.CC[_tcChannel].reg = (DCValue * _compareValue / 100) >> 8;
 
         //while (TCx->COUNT16.STATUS.bit.SYNCBUSY);
-        
+
         // Set the Dutycycle
         TCx->COUNT8.CC[_tcChannel].reg = (DCValue * _compareValue / 100) >> 8;
 
@@ -878,7 +879,9 @@ class SAMD_PWM
         PWM_LOGDEBUG3(F("setPWM_manual TC: New DCValue ="), DCValue * _compareValue / 100, F(", _compareValue ="),
                       _compareValue);
       }
+
 #else
+
       // Check which timer to use
       if (_tcNum >= TCC_INST_NUM)
       {
@@ -893,7 +896,8 @@ class SAMD_PWM
         PWM_LOGDEBUG3(F("setPWM_manual TC: New DCValue ="), DCValue * _compareValue / 100, F(", _compareValue ="),
                       _compareValue);
       }
-#endif      
+
+#endif
       else
       {
         Tcc* TCCx = (Tcc*) GetTC(_pinDesc.ulPWMChannel);
