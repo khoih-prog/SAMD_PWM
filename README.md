@@ -10,6 +10,7 @@
 <a href="https://www.buymeacoffee.com/khoihprog6" title="Donate to my libraries using BuyMeACoffee"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Donate to my libraries using BuyMeACoffee" style="height: 50px !important;width: 181px !important;" ></a>
 <a href="https://www.buymeacoffee.com/khoihprog6" title="Donate to my libraries using BuyMeACoffee"><img src="https://img.shields.io/badge/buy%20me%20a%20coffee-donate-orange.svg?logo=buy-me-a-coffee&logoColor=FFDD00" style="height: 20px !important;width: 200px !important;" ></a>
 
+
 ---
 ---
 
@@ -45,6 +46,7 @@
   * [ 5. PWM_Multi](examples/PWM_Multi)
   * [ 6. PWM_MultiChannel](examples/PWM_MultiChannel)
   * [ 7. PWM_Waveform](examples/PWM_Waveform)
+  * [ 8. PWM_StepperControl](examples/PWM_StepperControl) **New**
 * [Example PWM_Multi](#example-PWM_Multi)
 * [Debug Terminal Output Samples](#debug-terminal-output-samples)
   * [1. PWM_DynamicDutyCycle on SAMD_NANO_33_IOT](#1-PWM_DynamicDutyCycle-on-SAMD_NANO_33_IOT)
@@ -73,7 +75,7 @@
 
 This hardware-based PWM library enables you to use Hardware-PWM on **SAMD21/SAMD51 boards** such as `NANO_33_IOT`, `ITSYBITSY_M4`, `SEEED_XIAO_M0`, `SparkFun SAMD51_Thing_Plus`, etc., to create and output PWM. These purely hardware-based PWM channels can generate very high PWM frequencies, depending on CPU clock and acceptable accuracy. The maximum resolution can be **16-bit** for better accuracy when using Timer `TCCx`. With Timer `TCx`, only **8-bit** resolution is supported with lower accuracy.
 
-This library is using the **same or similar functions** as other FastPWM libraries, as follows, to enable you to **port your PWM code easily between platforms**
+This library is using the **same or similar functions** as other `FastPWM` sibling libraries, as follows, to enable you to **port your PWM code easily between platforms**
 
  1. [**RP2040_PWM**](https://github.com/khoih-prog/RP2040_PWM)
  2. [**AVR_PWM**](https://github.com/khoih-prog/AVR_PWM)
@@ -146,7 +148,6 @@ Functions using normal software-based PWMs, relying on `loop()` and calling `mil
  6. [Industruino SAMD core](https://github.com/Industruino/IndustruinoSAMD) for SAMD21/SAMD51 boards
 
   
-   
 ---
 ---
 
@@ -388,6 +389,7 @@ PWM_Instance->setPWM_manual(PWM_Pins, new_level);
  5. [PWM_Multi](examples/PWM_Multi)
  6. [PWM_MultiChannel](examples/PWM_MultiChannel)
  7. [PWM_Waveform](examples/PWM_Waveform)
+ 8. [PWM_StepperControl](examples/PWM_StepperControl) **New**
 
  
 ---
@@ -410,7 +412,7 @@ The following is the sample terminal output when running example [PWM_DynamicDut
 
 ```cpp
 Starting PWM_DynamicDutyCycle on SAMD_NANO_33_IOT
-SAMD_PWM v1.0.0
+SAMD_PWM v1.0.1
 [PWM] calcTCCPrescaler: OK pin = 11 , period = 200 , _prescaler = 1 , F_CPU = 48000000
 [PWM] calcTCCPrescaler: _dutycycle = 32768 , frequency = 5000.00 , _prescalerConfigBits = 0 , _compareValue = 9599
 [PWM] SAMD21 setPWM_Int: _tcNum = 2 , _tcChannel = 0 , _pinAttr = 28
@@ -451,7 +453,7 @@ The following is the sample terminal output when running example [**PWM_Multi**]
 
 ```cpp
 Starting PWM_Multi on SAMD_NANO_33_IOT
-SAMD_PWM v1.0.0
+SAMD_PWM v1.0.1
 [PWM] calcTCCPrescaler: OK pin = 4 , period = 500 , _prescaler = 1 , F_CPU = 48000000
 [PWM] calcTCCPrescaler: _dutycycle = 6553 , frequency = 2000.00 , _prescalerConfigBits = 0 , _compareValue = 23999
 [PWM] SAMD21 setPWM_Int: _tcNum = 1 , _tcChannel = 1 , _pinAttr = 28
@@ -501,7 +503,7 @@ The following is the sample terminal output when running example [**PWM_DynamicF
 
 ```cpp
 Starting PWM_DynamicFreq on ITSYBITSY_M4
-SAMD_PWM v1.0.0
+SAMD_PWM v1.0.1
 [PWM] calcTCCPrescaler: OK pin = 11 , period = 100 , _prescaler = 1 , F_CPU = 120000000
 [PWM] calcTCCPrescaler: _dutycycle = 32768 , frequency = 10000.00 , _prescalerConfigBits = 0 , _compareValue = 11999
 [PWM] SAMD51 setPWM_Int: _tcNum = 0 , _tcChannel = 1 , _pinAttr = 512
@@ -542,7 +544,7 @@ The following is the sample terminal output when running example [**PWM_Waveform
 
 ```cpp
 Starting PWM_Waveform on ITSYBITSY_M4
-SAMD_PWM v1.0.0
+SAMD_PWM v1.0.1
 [PWM] calcTCCPrescaler: OK pin = 11 , period = 1000 , _prescaler = 1 , F_CPU = 120000000
 [PWM] calcTCCPrescaler: _dutycycle = 0 , frequency = 1000.00 , _prescalerConfigBits = 0 , _compareValue = 119999
 [PWM] setPWM: _dutycycle = 655 , frequency = 1000.00
@@ -643,7 +645,7 @@ The following is the sample terminal output when running example [**PWM_Basic**]
 
 ```cpp
 Starting PWM_Basic on ITSYBITSY_M4
-SAMD_PWM v1.0.0
+SAMD_PWM v1.0.1
 [PWM] calcTCPrescaler: OK pin = 24 , period = 1000 , _prescaler = 1 , F_CPU = 120000000
 [PWM] calcTCPrescaler: _dutycycle = 0 , frequency = 1000.00 , _prescalerConfigBits = 0 , _compareValue = 119999
 [PWM] setPWM: _dutycycle = 13107 , frequency = 2000.00
@@ -684,7 +686,7 @@ The following is the sample terminal output when running example [**PWM_Basic**]
 
 ```cpp
 Starting PWM_Basic on SAMD_NANO_33_IOT
-SAMD_PWM v1.0.0
+SAMD_PWM v1.0.1
 [PWM] calcTCPrescaler: OK pin = 12 , period = 1000 , _prescaler = 1 , F_CPU = 48000000
 [PWM] calcTCPrescaler: _dutycycle = 0 , frequency = 1000.00 , _prescalerConfigBits = 0 , _compareValue = 47999
 [PWM] setPWM: _dutycycle = 13107 , frequency = 2000.00
@@ -759,6 +761,7 @@ Submit issues to: [SAMD_PWM issues](https://github.com/khoih-prog/SAMD_PWM/issue
 - [Sparkfun SAMD core](https://github.com/sparkfun/Arduino_Boards)
 - [Industruino SAMD core](https://github.com/Industruino/IndustruinoSAMD)
 - [Industruino SAMx core](https://github.com/Industruino/IndustruinoSAMx)
+ 2. Add example [PWM_StepperControl](https://github.com/khoih-prog/SAMD_PWM/tree/main/examples/PWM_StepperControl) to demo how to control Stepper Motor using PWM
  
 ---
 ---
@@ -767,12 +770,22 @@ Submit issues to: [SAMD_PWM issues](https://github.com/khoih-prog/SAMD_PWM/issue
 
 Many thanks for everyone for bug reporting, new feature suggesting, testing and contributing to the development of this library.
 
+1. Thanks to [Paul van Dinther](https://github.com/dinther) for proposing new way to use PWM to drive Stepper-Motor in [Using PWM to step a stepper driver #16](https://github.com/khoih-prog/RP2040_PWM/issues/16), leading to v2.0.3
+
+
+<table>
+  <tr>
+    <td align="center"><a href="https://github.com/dinther"><img src="https://github.com/dinther.png" width="100px;" alt="dinther"/><br /><sub><b>Paul van Dinther</b></sub></a><br /></td>
+  </tr>
+</table>
+
 
 ---
 
 ## Contributing
 
 If you want to contribute to this project:
+
 - Report bugs and errors
 - Ask for enhancements
 - Create issues and pull requests

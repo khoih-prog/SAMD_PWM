@@ -1,6 +1,6 @@
 {
   "name": "SAMD_PWM",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "keywords": "timing, device, control, timer, interrupt, hardware, isr, isr-based, hardware-timer, isr-timer, isr-based-timer, mission-critical, accuracy, precise, non-blocking, samd, samd21, samd51, nano-33-iot",
   "description": "This library enables you to use Hardware-based PWM channels on SAMD21/SAMD51-based boards to create and output PWM to pins. The most important feature is they're purely hardware-based PWM channels, supporting very high PWM frequencies. Therefore, their executions are not blocked by bad-behaving functions or tasks. This important feature is absolutely necessary for mission-critical tasks. These hardware-based PWMs, still work even if other software functions are blocking. Moreover, they are much more precise (certainly depending on clock frequency accuracy) than other software-based PWM using ISR, millis() or micros(). That's necessary if you need to control devices requiring high precision. New efficient setPWM_manual function to facilitate waveform creation using PWM",
   "authors":
