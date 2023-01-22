@@ -31,6 +31,8 @@ A clear and concise description of what you expected to happen.
 
 If applicable, add screenshots to help explain your problem.
 
+---
+
 ### Information
 
 Please ensure to specify the following:
@@ -45,6 +47,10 @@ Please ensure to specify the following:
   * Network configuration
 
 
+Please be educated, civilized and constructive as you've always been. Disrespective posts against [GitHub Code of Conduct](https://docs.github.com/en/site-policy/github-terms/github-event-code-of-conduct) will be ignored and deleted.
+
+---
+
 ### Example
 
 ```
@@ -52,7 +58,7 @@ Arduino IDE version: 1.8.19
 Arduino SAMD Core Version 1.8.13
 SAMD_NANO_33_IOT
 OS: Ubuntu 20.04 LTS
-Linux xy-Inspiron-3593 5.15.0-52-generic #58~20.04.1-Ubuntu SMP Thu Oct 13 13:09:46 UTC 2022 x86_64 x86_64 x86_64 GNU/Linux
+Linux xy-Inspiron-3593 5.15.0-58-generic #64~20.04.1-Ubuntu SMP Fri Jan 6 16:42:31 UTC 2023 x86_64 x86_64 x86_64 GNU/Linux
 
 Context:
 I encountered a crash while using this library.
