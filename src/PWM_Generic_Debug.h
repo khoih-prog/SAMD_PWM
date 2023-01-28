@@ -7,12 +7,13 @@
   Built by Khoi Hoang https://github.com/khoih-prog/SAMD_PWM
   Licensed under MIT license
 
-  Version: 1.0.1
+  Version: 1.2.0
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
   1.0.0   K Hoang      01/11/2022 Initial coding for SAMD21/SAMD51 boards
   1.0.1   K Hoang      22/01/2023 Add `PWM_StepperControl` example
+  1.2.0   K Hoang      28/01/2023 Add `PWM_SpeedTest` and `PWM_manual` examples and faster functions
  *****************************************************************************************************************************/
 
 #pragma once

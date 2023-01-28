@@ -7,12 +7,13 @@
   Built by Khoi Hoang https://github.com/khoih-prog/SAMD_PWM
   Licensed under MIT license
 
-  Version: 1.0.1
+  Version: 1.2.0
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
   1.0.0   K Hoang      01/11/2022 Initial coding for SAMD21/SAMD51 boards
   1.0.1   K Hoang      22/01/2023 Add `PWM_StepperControl` example
+  1.2.0   K Hoang      28/01/2023 Add `PWM_SpeedTest` and `PWM_manual` examples and faster functions
 *****************************************************************************************************************************/
 
 #pragma once
@@ -137,13 +138,13 @@
 #include "Arduino.h"
 
 #ifndef SAMD_PWM_VERSION
-  #define SAMD_PWM_VERSION             "SAMD_PWM v1.0.1"
+  #define SAMD_PWM_VERSION             "SAMD_PWM v1.2.0"
 
   #define SAMD_PWM_VERSION_MAJOR       1
-  #define SAMD_PWM_VERSION_MINOR       0
-  #define SAMD_PWM_VERSION_PATCH       1
+  #define SAMD_PWM_VERSION_MINOR       2
+  #define SAMD_PWM_VERSION_PATCH       0
 
-  #define SAMD_PWM_VERSION_INT         1000001
+  #define SAMD_PWM_VERSION_INT         1002000
 #endif
 
 #include "PWM_Generic_Debug.h"
@@ -240,6 +241,8 @@
 #define INVALID_SAMD_PIN          255
 
 ////////////////////////////////////////
+
+#define MAX_16BIT                 65535UL
 
 #define MAX_COUNT_16BIT           65536UL
 
@@ -832,7 +835,8 @@ class SAMD_PWM
 
     bool setPWM(const uint8_t& pin, const float& frequency, const float& dutycycle)
     {
-      _dutycycle = round(map(dutycycle, 0, 100.0f, 0, MAX_COUNT_16BIT));
+      //_dutycycle = round(map(dutycycle, 0, 100.0f, 0, MAX_COUNT_16BIT));
+      _dutycycle = round(map(dutycycle, 0, 100.0f, 0, MAX_16BIT));
 
       PWM_LOGDEBUG3(F("setPWM: _dutycycle ="), _dutycycle, F(", frequency ="), frequency);
 
@@ -853,11 +857,15 @@ class SAMD_PWM
     ///////////////////////////////////////////
 
     // Must have same frequency
-    bool setPWM_manual(const uint8_t& pin, const uint16_t& DCValue)
+    // From v1.0.1-, DCValue = 0-100
+    // From v1.2.0+, DCValue = 0-65535
+    bool setPWM_manual(const uint8_t& pin, const uint16_t& dutyCycle)
     {
       // Not the same pin or overvalue
-      if ( (_pin != pin) || (DCValue >=  (1 << _resolution) ) )
+      if ( (_pin != pin) || (dutyCycle >=  (1 << _resolution) ) )
         return false;
+        
+      uint16_t DCValue = ( (uint32_t) dutyCycle * 100 ) / MAX_16BIT;
 
 #if defined(__SAMD51__)
       // Check which timer to use
@@ -906,19 +914,47 @@ class SAMD_PWM
 
         PWM_LOGDEBUG3(F("setPWM_manual TCC: DCValue ="), DCValue, F(", _frequency ="), _frequency);
         PWM_LOGDEBUG3(F("setPWM_manual TCC: New DCValue ="), DCValue * _compareValue / 100, F(", _compareValue ="),
-                      _compareValue);
+                      _compareValue);                               
       }
 
-      _dutycycle = DCValue * _compareValue / 100;
+      _dutycycle = dutyCycle;
 
       return true;
+    }
+    
+    ///////////////////////////////////////////
+       
+    // Faster than setPWM_DCPercentage_manual by not using float
+    // DCPercentage from 0-65535 for 0.0f - 100.0f
+    bool setPWM_DCPercentageInt_manual(const uint8_t& pin, const uint16_t& DCPercentage)
+    {    
+      _dutycycle = DCPercentage;
+      
+      // Convert to DCValue based on resolution = MAX_16BIT
+      PWM_LOGDEBUG3(F("setPWM_DCPercentage_manual: DCPercentage ="), DCPercentage, F(", dc ="), ( DCPercentage * MAX_16BIT ) / 100.0f);
+      
+      return setPWM_manual(pin, _dutycycle);
+    }
+    
+    ///////////////////////////////////////////
+    
+    // DCPercentage from 0.0f - 100.0f
+    bool setPWM_DCPercentage_manual(const uint8_t& pin, const float& DCPercentage)
+    {
+      // Convert to 0-65535
+      _dutycycle = ( DCPercentage * MAX_16BIT ) / 100.0f;
+      
+      // Convert to DCValue based on resolution = MAX_16BIT
+      PWM_LOGDEBUG3(F("setPWM_DCPercentage_manual: DCPercentage ="), DCPercentage, F(", dc ="), ( DCPercentage * MAX_16BIT ) / 100.0f);
+      
+      return setPWM_manual(pin, _dutycycle);
     }
 
     ///////////////////////////////////////////
 
     inline float getActualDutyCycle()
     {
-      return ( ( (float) _dutycycle + 1 ) * 100 / (1 << _resolution) );
+      return ( ( (float) _dutycycle ) * 100 / (1 << _resolution) );
     }
 
     ///////////////////////////////////////////
