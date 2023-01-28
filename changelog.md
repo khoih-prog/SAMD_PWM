@@ -17,13 +17,25 @@
 ## Table of Contents
 
 * [Changelog](#changelog)
-  * [Releases v1.0.1](#releases-v101)
+  * [Releases v1.2.0](#Releases-v120)
+  * [Releases v1.0.1](#Releases-v101)
   * [Releases v1.0.0](#releases-v100)
 
 ---
 ---
 
 ## Changelog
+
+### Releases v1.2.0
+
+1. Optimize speed with new `setPWM_DCPercentageInt_manual` function to improve speed almost 500 times compared to `setPWM`
+2. Add example [PWM_manual](https://github.com/khoih-prog/SAMD_PWM/tree/main/examples/PWM_manual) to demo how to correctly use PWM to generate waveform. Check [About DCValue in setPWM_manual #2](https://github.com/khoih-prog/AVR_PWM/discussions/2)
+3. Add example [PWM_SpeedTest](https://github.com/khoih-prog/SAMD_PWM/tree/main/examples/PWM_SpeedTest) to demo the better speed of new `setPWM_DCPercentageInt_manual` function
+4. Breaking change: Modify `setPWM_manual` function to take `16-bit` dutycycle instead from merely `0-100` for better accuracy
+5. Modify example [PWM_Waveform](https://github.com/khoih-prog/SAMD_PWM/tree/main/examples/PWM_Waveform) to adapt to breaking change of `setPWM_manual` function
+6. Improve `README.md` so that links can be used in other sites, such as `PIO`
+7. Bump up to v1.2.0 to sync with other Fast PWM libraries
+
 
 ### Releases v1.0.1
 

@@ -39,14 +39,16 @@
   * [3. Set or change PWM frequency or dutyCycle](#3-set-or-change-PWM-frequency-or-dutyCycle)
   * [4. Set or change PWM frequency and dutyCycle manually and efficiently in waveform creation](#4-Set-or-change-PWM-frequency-and-dutyCycle-manually-and-efficiently-in-waveform-creation)
 * [Examples](#examples)
-  * [ 1. PWM_Basic](examples/PWM_Basic)
-  * [ 2. PWM_DynamicDutyCycle](examples/PWM_DynamicDutyCycle) 
-  * [ 3. PWM_DynamicDutyCycle_Int](examples/PWM_DynamicDutyCycle_Int)
-  * [ 4. PWM_DynamicFreq](examples/PWM_DynamicFreq)
-  * [ 5. PWM_Multi](examples/PWM_Multi)
-  * [ 6. PWM_MultiChannel](examples/PWM_MultiChannel)
-  * [ 7. PWM_Waveform](examples/PWM_Waveform)
-  * [ 8. PWM_StepperControl](examples/PWM_StepperControl) **New**
+  * [ 1. PWM_Basic](https://github.com/khoih-prog/SAMD_PWM/tree/main/examples/PWM_Basic)
+  * [ 2. PWM_DynamicDutyCycle](https://github.com/khoih-prog/SAMD_PWM/tree/main/examples/PWM_DynamicDutyCycle) 
+  * [ 3. PWM_DynamicDutyCycle_Int](https://github.com/khoih-prog/SAMD_PWM/tree/main/examples/PWM_DynamicDutyCycle_Int)
+  * [ 4. PWM_DynamicFreq](https://github.com/khoih-prog/SAMD_PWM/tree/main/examples/PWM_DynamicFreq)
+  * [ 5. PWM_Multi](https://github.com/khoih-prog/SAMD_PWM/tree/main/examples/PWM_Multi)
+  * [ 6. PWM_MultiChannel](https://github.com/khoih-prog/SAMD_PWM/tree/main/examples/PWM_MultiChannel)
+  * [ 7. PWM_Waveform](https://github.com/khoih-prog/SAMD_PWM/tree/main/examples/PWM_Waveform)
+  * [ 8. PWM_StepperControl](https://github.com/khoih-prog/SAMD_PWM/tree/main/examples/PWM_StepperControl) **New**
+  * [ 9. PWM_manual](https://github.com/khoih-prog/SAMD_PWM/tree/main/examples/PWM_manual) **New**
+  * [10. PWM_SpeedTest](https://github.com/khoih-prog/SAMD_PWM/tree/main/examples/PWM_SpeedTest) **New**
 * [Example PWM_Multi](#example-PWM_Multi)
 * [Debug Terminal Output Samples](#debug-terminal-output-samples)
   * [1. PWM_DynamicDutyCycle on SAMD_NANO_33_IOT](#1-PWM_DynamicDutyCycle-on-SAMD_NANO_33_IOT)
@@ -55,6 +57,8 @@
   * [4. PWM_Waveform on ITSYBITSY_M4](#4-PWM_Waveform-on-ITSYBITSY_M4)
   * [5. PWM_Basic on ITSYBITSY_M4](#5-PWM_Basic-on-ITSYBITSY_M4)
   * [6. PWM_Basic on SAMD_NANO_33_IOT](#6-PWM_Basic-on-SAMD_NANO_33_IOT)
+  * [7. PWM_manual on ITSYBITSY_M4](#7-PWM_manual-on-ITSYBITSY_M4)
+  * [8. PWM_SpeedTest on ITSYBITSY_M4](#8-PWM_SpeedTest-on-ITSYBITSY_M4)
 * [Debug](#debug)
 * [Troubleshooting](#troubleshooting)
 * [Issues](#issues)
@@ -101,7 +105,7 @@ This important feature is absolutely necessary for mission-critical tasks. These
 
 New efficient `setPWM_manual()` function enables waveform creation using PWM.
 
-The [**PWM_Multi**](examples/PWM_Multi) example will demonstrate the usage of multichannel PWM using multiple Hardware-PWM blocks (Timer & Channel). The 4 independent Hardware-PWM channels are used **to control 4 different PWM outputs**, with totally independent frequencies and dutycycles on `SAMD21/SAMD51`.
+The [**PWM_Multi**](https://github.com/khoih-prog/SAMD_PWM/tree/main/examples/PWM_Multi) example will demonstrate the usage of multichannel PWM using multiple Hardware-PWM blocks (Timer & Channel). The 4 independent Hardware-PWM channels are used **to control 4 different PWM outputs**, with totally independent frequencies and dutycycles on `SAMD21/SAMD51`.
 
 Being hardware-based PWM, their executions are not blocked by bad-behaving functions / tasks, such as connecting to WiFi, Internet or Blynk services.
 
@@ -361,7 +365,16 @@ PWM_Instance->setPWM_Int(pinToUse, frequency, dutyCycle);
 Function prototype
 
 ```cpp
-bool setPWM_manual(const uint8_t& pin, const uint16_t& DCValue);
+// Must have same frequency
+// From v1.0.1-, DCValue = 0-100
+// From v1.2.0+, DCValue = 0-65535
+bool setPWM_manual(const uint8_t& pin, const uint16_t& dutyCycle);
+
+// DCPercentage from 0.0f - 100.0f
+bool setPWM_DCPercentage_manual(const uint8_t& pin, const float& DCPercentage);
+
+// DCPercentage from 0-65535 for 0.0f - 100.0f
+bool setPWM_DCPercentageInt_manual(const uint8_t& pin, const uint16_t& DCPercentage);
 ```
 
 Need to call only once for each pin
@@ -371,31 +384,60 @@ Need to call only once for each pin
 PWM_Instance->setPWM(PWM_Pins, frequency, dutyCycle);
 ```
 
-after that, if just changing `dutyCycle` / `level`, use 
+after that, if just changing `dutyCycle` / `level`, use the `faster`
 
 ```cpp
-PWM_Instance->setPWM_manual(PWM_Pins, new_level);
+// dutycycle = 0-65535 for 0-100%
+// 1084 ns
+PWM_Instance->setPWM_manual(pinToUse, dutycycle);
 ```
+
+or better and much easier to use, but `slowest`
+
+```cpp
+// 1259 ns
+new_DCPercentage = 50.0f;
+PWM_Instance->setPWM_DCPercentage_manual(pinToUse, new_DCPercentage);
+```
+
+or the **fastest**
+
+```cpp
+// dutycyclePercent = 0-65535 == 0-100%
+// 1067 ns
+dutycyclePercentInt = 1 << 15;   // 50%
+PWM_Instance->setPWM_DCPercentageInt_manual(pinToUse, dutycyclePercentInt);
+```
+
+Don't use the extremely inefficient `setPWM()` for this purpose
+
+```cpp
+// Very inefficient, don't use => 499251 ns, 500-time slower
+//PWM_Instance->setPWM(pinToUse, frequency, dutycyclePercent);
+```
+
 
 ---
 ---
 
 ### Examples: 
 
- 1. [PWM_Basic](examples/PWM_Basic)
- 2. [PWM_DynamicDutyCycle](examples/PWM_DynamicDutyCycle)
- 3. [PWM_DynamicDutyCycle_Int](examples/PWM_DynamicDutyCycle_Int)
- 4. [PWM_DynamicFreq](examples/PWM_DynamicFreq)
- 5. [PWM_Multi](examples/PWM_Multi)
- 6. [PWM_MultiChannel](examples/PWM_MultiChannel)
- 7. [PWM_Waveform](examples/PWM_Waveform)
- 8. [PWM_StepperControl](examples/PWM_StepperControl) **New**
+ 1. [PWM_Basic](https://github.com/khoih-prog/SAMD_PWM/tree/main/examples/PWM_Basic)
+ 2. [PWM_DynamicDutyCycle](https://github.com/khoih-prog/SAMD_PWM/tree/main/examples/PWM_DynamicDutyCycle)
+ 3. [PWM_DynamicDutyCycle_Int](https://github.com/khoih-prog/SAMD_PWM/tree/main/examples/PWM_DynamicDutyCycle_Int)
+ 4. [PWM_DynamicFreq](https://github.com/khoih-prog/SAMD_PWM/tree/main/examples/PWM_DynamicFreq)
+ 5. [PWM_Multi](https://github.com/khoih-prog/SAMD_PWM/tree/main/examples/PWM_Multi)
+ 6. [PWM_MultiChannel](https://github.com/khoih-prog/SAMD_PWM/tree/main/examples/PWM_MultiChannel)
+ 7. [PWM_Waveform](https://github.com/khoih-prog/SAMD_PWM/tree/main/examples/PWM_Waveform)
+ 8. [PWM_StepperControl](https://github.com/khoih-prog/SAMD_PWM/tree/main/examples/PWM_StepperControl) **New**
+ 9. [PWM_manual](https://github.com/khoih-prog/SAMD_PWM/tree/main/examples/PWM_manual) **New**
+10. [PWM_SpeedTest](https://github.com/khoih-prog/SAMD_PWM/tree/main/examples/PWM_SpeedTest) **New**
 
  
 ---
 ---
 
-### Example [PWM_Multi](examples/PWM_Multi)
+### Example [PWM_Multi](https://github.com/khoih-prog/SAMD_PWM/tree/main/examples/PWM_Multi)
 
 https://github.com/khoih-prog/SAMD_PWM/blob/aec5386c6bca3239de15f8e8053cad87f18bc708/examples/PWM_Multi/PWM_Multi.ino#L11-L112
 
@@ -407,7 +449,7 @@ https://github.com/khoih-prog/SAMD_PWM/blob/aec5386c6bca3239de15f8e8053cad87f18b
 
 ### 1. PWM_DynamicDutyCycle on SAMD_NANO_33_IOT
 
-The following is the sample terminal output when running example [PWM_DynamicDutyCycle](examples/PWM_DynamicDutyCycle) on **SAMD21 SAMD_NANO_33_IOT**, to demonstrate the ability to provide high PWM frequencies and ability to change DutyCycle `on-the-fly` using **TCC** timer for 16-bit PWM
+The following is the sample terminal output when running example [PWM_DynamicDutyCycle](https://github.com/khoih-prog/SAMD_PWM/tree/main/examples/PWM_DynamicDutyCycle) on **SAMD21 SAMD_NANO_33_IOT**, to demonstrate the ability to provide high PWM frequencies and ability to change DutyCycle `on-the-fly` using **TCC** timer for 16-bit PWM
 
 
 ```cpp
@@ -449,7 +491,7 @@ Actual data: pin = 11, PWM DC = 90.00, PWMPeriod = 200.00, PWM Freq (Hz) = 5000.
 
 ### 2. PWM_Multi on SAMD_NANO_33_IOT
 
-The following is the sample terminal output when running example [**PWM_Multi**](examples/PWM_Multi) on **SAMD21 SAMD_NANO_33_IOT**, to demonstrate the ability to provide high PWM frequencies on multiple `PWM-capable` pins using **TCC** timer for 16-bit PWM
+The following is the sample terminal output when running example [**PWM_Multi**](https://github.com/khoih-prog/SAMD_PWM/tree/main/examples/PWM_Multi) on **SAMD21 SAMD_NANO_33_IOT**, to demonstrate the ability to provide high PWM frequencies on multiple `PWM-capable` pins using **TCC** timer for 16-bit PWM
 
 ```cpp
 Starting PWM_Multi on SAMD_NANO_33_IOT
@@ -499,7 +541,7 @@ Actual data: pin = 12, PWM DC = 90.00, PWMPeriod = 125.00, PWM Freq (Hz) = 8000.
 
 ### 3. PWM_DynamicFreq on ITSYBITSY_M4
 
-The following is the sample terminal output when running example [**PWM_DynamicFreq**](examples/PWM_DynamicFreq) on **SAMD51 ITSYBITSY_M4**, to demonstrate the ability to change dynamically PWM frequencies on SAMD51 using **TCC** timer for 16-bit PWM
+The following is the sample terminal output when running example [**PWM_DynamicFreq**](https://github.com/khoih-prog/SAMD_PWM/tree/main/examples/PWM_DynamicFreq) on **SAMD51 ITSYBITSY_M4**, to demonstrate the ability to change dynamically PWM frequencies on SAMD51 using **TCC** timer for 16-bit PWM
 
 ```cpp
 Starting PWM_DynamicFreq on ITSYBITSY_M4
@@ -539,7 +581,7 @@ Actual data: pin = 11, PWM DC = 50.00, PWMPeriod = 100.00, PWM Freq (Hz) = 10000
 
 ### 4. PWM_Waveform on ITSYBITSY_M4
 
-The following is the sample terminal output when running example [**PWM_Waveform**](examples/PWM_Waveform) on **SAMD51 ITSYBITSY_M4**, to demonstrate how to use the `setPWM_manual()` function in wafeform creation using **TCC** timer for 16-bit PWM
+The following is the sample terminal output when running example [**PWM_Waveform**](https://github.com/khoih-prog/SAMD_PWM/tree/main/examples/PWM_Waveform) on **SAMD51 ITSYBITSY_M4**, to demonstrate how to use the `setPWM_manual()` function in wafeform creation using **TCC** timer for 16-bit PWM
 
 
 ```cpp
@@ -640,7 +682,7 @@ Actual data: pin = 11, PWM DutyCycle = 0.00, PWMPeriod = 1000.00, PWM Freq (Hz) 
 
 ### 5. PWM_Basic on ITSYBITSY_M4
 
-The following is the sample terminal output when running example [**PWM_Basic**](examples/PWM_Basic) on **SAMD51 ITSYBITSY_M4**, to demonstrate how to use the basic function, using **TC** timer for 8-bit PWM
+The following is the sample terminal output when running example [**PWM_Basic**](https://github.com/khoih-prog/SAMD_PWM/tree/main/examples/PWM_Basic) on **SAMD51 ITSYBITSY_M4**, to demonstrate how to use the basic function, using **TC** timer for 8-bit PWM
 
 
 ```cpp
@@ -682,7 +724,7 @@ SAMD_PWM v1.0.1
 
 ### 6. PWM_Basic on SAMD_NANO_33_IOT
 
-The following is the sample terminal output when running example [**PWM_Basic**](examples/PWM_Basic) on **SAMD21 SAMD_NANO_33_IOT**, to demonstrate how to use the basic function, using **TC** timer for 8-bit PWM
+The following is the sample terminal output when running example [**PWM_Basic**](https://github.com/khoih-prog/SAMD_PWM/tree/main/examples/PWM_Basic) on **SAMD21 SAMD_NANO_33_IOT**, to demonstrate how to use the basic function, using **TC** timer for 8-bit PWM
 
 ```cpp
 Starting PWM_Basic on SAMD_NANO_33_IOT
@@ -711,6 +753,175 @@ SAMD_PWM v1.0.1
 [PWM] SAMD21 setPWM_Int: newDC = 4799 , input dutycycle = 13107 , _compareValue = 23999 , frequency = 2000.00
 [PWM] SAMD21 setPWM_Int: New TC => newDC = 18 , input dutycycle = 13107 , _compareValue = 93 , frequency = 2000.00
 ```
+
+
+---
+
+### 7. PWM_manual on ITSYBITSY_M4
+
+The following is the sample terminal output when running example [**PWM_manual**](https://github.com/khoih-prog/SAMD_PWM/tree/main/examples/PWM_manual) on **SAMD51 ITSYBITSY_M4**, to demonstrate how to use the `setPWM_manual()` and `setPWM_DCPercentage_manual()` functions in wafeform creation
+
+
+```cpp
+Starting PWM_manual on ITSYBITSY_M4
+SAMD_PWM v1.2.0
+Not USING_DC_PERCENT
+=================================================================================================
+Actual data: pin = 11, PWM DC = 0.00, PWMPeriod = 500.00, PWM Freq (Hz) = 2000.0000
+=================================================================================================
+=================================================================================================
+Actual data: pin = 11, PWM DC = 5.00, PWMPeriod = 500.00, PWM Freq (Hz) = 2000.0000
+=================================================================================================
+=================================================================================================
+Actual data: pin = 11, PWM DC = 10.00, PWMPeriod = 500.00, PWM Freq (Hz) = 2000.0000
+=================================================================================================
+=================================================================================================
+Actual data: pin = 11, PWM DC = 15.00, PWMPeriod = 500.00, PWM Freq (Hz) = 2000.0000
+=================================================================================================
+=================================================================================================
+Actual data: pin = 11, PWM DC = 20.00, PWMPeriod = 500.00, PWM Freq (Hz) = 2000.0000
+=================================================================================================
+=================================================================================================
+Actual data: pin = 11, PWM DC = 25.00, PWMPeriod = 500.00, PWM Freq (Hz) = 2000.0000
+=================================================================================================
+=================================================================================================
+Actual data: pin = 11, PWM DC = 30.00, PWMPeriod = 500.00, PWM Freq (Hz) = 2000.0000
+=================================================================================================
+=================================================================================================
+Actual data: pin = 11, PWM DC = 35.00, PWMPeriod = 500.00, PWM Freq (Hz) = 2000.0000
+=================================================================================================
+=================================================================================================
+Actual data: pin = 11, PWM DC = 40.00, PWMPeriod = 500.00, PWM Freq (Hz) = 2000.0000
+=================================================================================================
+=================================================================================================
+Actual data: pin = 11, PWM DC = 45.00, PWMPeriod = 500.00, PWM Freq (Hz) = 2000.0000
+=================================================================================================
+=================================================================================================
+Actual data: pin = 11, PWM DC = 50.00, PWMPeriod = 500.00, PWM Freq (Hz) = 2000.0000
+=================================================================================================
+=================================================================================================
+Actual data: pin = 11, PWM DC = 55.00, PWMPeriod = 500.00, PWM Freq (Hz) = 2000.0000
+=================================================================================================
+=================================================================================================
+Actual data: pin = 11, PWM DC = 60.00, PWMPeriod = 500.00, PWM Freq (Hz) = 2000.0000
+=================================================================================================
+=================================================================================================
+Actual data: pin = 11, PWM DC = 65.00, PWMPeriod = 500.00, PWM Freq (Hz) = 2000.0000
+=================================================================================================
+=================================================================================================
+Actual data: pin = 11, PWM DC = 70.00, PWMPeriod = 500.00, PWM Freq (Hz) = 2000.0000
+=================================================================================================
+=================================================================================================
+Actual data: pin = 11, PWM DC = 75.00, PWMPeriod = 500.00, PWM Freq (Hz) = 2000.0000
+=================================================================================================
+=================================================================================================
+Actual data: pin = 11, PWM DC = 80.00, PWMPeriod = 500.00, PWM Freq (Hz) = 2000.0000
+=================================================================================================
+=================================================================================================
+Actual data: pin = 11, PWM DC = 85.01, PWMPeriod = 500.00, PWM Freq (Hz) = 2000.0000
+=================================================================================================
+=================================================================================================
+Actual data: pin = 11, PWM DC = 90.01, PWMPeriod = 500.00, PWM Freq (Hz) = 2000.0000
+=================================================================================================
+=================================================================================================
+Actual data: pin = 11, PWM DC = 95.01, PWMPeriod = 500.00, PWM Freq (Hz) = 2000.0000
+=================================================================================================
+=================================================================================================
+Actual data: pin = 11, PWM DC = 100.00, PWMPeriod = 500.00, PWM Freq (Hz) = 2000.0000
+=================================================================================================
+=================================================================================================
+Actual data: pin = 11, PWM DC = 0.00, PWMPeriod = 500.00, PWM Freq (Hz) = 2000.0000
+=================================================================================================
+...
+```
+
+---
+
+### 8. PWM_SpeedTest on ITSYBITSY_M4
+
+The following is the sample terminal output when running example [**PWM_SpeedTest**](https://github.com/khoih-prog/SAMD_PWM/tree/main/examples/PWM_SpeedTest) on **ITSYBITSY_M4**, to demonstrate how to use new faster `setPWM_manual()` function in wafeform creation, The time is `1084 ns` compared to `499,500 ns` when using `setPWM()` function. The fastest is `setPWM_DCPercentageInt_manual` with `1067 ns`, which is better to be used with pre-calculated values in array
+
+
+##### USING_DC_PERCENT
+
+```
+Starting PWM_SpeedTest on ITSYBITSY_M4
+SAMD_PWM v1.2.0
+Average time of setPWM function USING_DC_PERCENT
+=================================================================================================
+Actual data: pin = 11, PWM DC = 44.86, PWMPeriod = 500.00, PWM Freq (Hz) = 2000.0000
+=================================================================================================
+count=937083, ns=1067
+=================================================================================================
+Actual data: pin = 11, PWM DC = 44.86, PWMPeriod = 500.00, PWM Freq (Hz) = 2000.0000
+=================================================================================================
+count=936335, ns=1067
+=================================================================================================
+Actual data: pin = 11, PWM DC = 44.86, PWMPeriod = 500.00, PWM Freq (Hz) = 2000.0000
+=================================================================================================
+count=936358, ns=1067
+=================================================================================================
+Actual data: pin = 11, PWM DC = 44.86, PWMPeriod = 500.00, PWM Freq (Hz) = 2000.0000
+=================================================================================================
+count=936334, ns=1067
+...
+```
+
+##### USING_DC_PERCENT with extremely slow setPWM()
+
+```
+Starting PWM_SpeedTest on ITSYBITSY_M4
+SAMD_PWM v1.2.0
+Average time of setPWM function USING_DC_PERCENT
+=================================================================================================
+Actual data: pin = 11, PWM DC = 50.00, PWMPeriod = 500.00, PWM Freq (Hz) = 2000.0000
+=================================================================================================
+count=2002, ns=499500
+=================================================================================================
+Actual data: pin = 11, PWM DC = 50.00, PWMPeriod = 500.00, PWM Freq (Hz) = 2000.0000
+=================================================================================================
+count=2003, ns=499251
+=================================================================================================
+Actual data: pin = 11, PWM DC = 50.00, PWMPeriod = 500.00, PWM Freq (Hz) = 2000.0000
+=================================================================================================
+count=2003, ns=499251
+=================================================================================================
+Actual data: pin = 11, PWM DC = 50.00, PWMPeriod = 500.00, PWM Freq (Hz) = 2000.0000
+=================================================================================================
+count=2003, ns=499251
+=================================================================================================
+Actual data: pin = 11, PWM DC = 50.00, PWMPeriod = 500.00, PWM Freq (Hz) = 2000.0000
+=======================================================
+```
+
+##### not USING_DC_PERCENT
+
+```cpp
+Starting PWM_SpeedTest on ITSYBITSY_M4
+SAMD_PWM v1.2.0
+Average time of setPWM function not USING_DC_PERCENT
+=================================================================================================
+Actual data: pin = 11, PWM DC = 44.86, PWMPeriod = 500.00, PWM Freq (Hz) = 2000.0000
+=================================================================================================
+count=922600, ns=1083
+=================================================================================================
+Actual data: pin = 11, PWM DC = 44.86, PWMPeriod = 500.00, PWM Freq (Hz) = 2000.0000
+=================================================================================================
+count=921932, ns=1084
+=================================================================================================
+Actual data: pin = 11, PWM DC = 44.86, PWMPeriod = 500.00, PWM Freq (Hz) = 2000.0000
+=================================================================================================
+count=921965, ns=1084
+=================================================================================================
+Actual data: pin = 11, PWM DC = 44.86, PWMPeriod = 500.00, PWM Freq (Hz) = 2000.0000
+=================================================================================================
+count=921951, ns=1084
+=================================================================================================
+Actual data: pin = 11, PWM DC = 44.86, PWMPeriod = 500.00, PWM Freq (Hz) = 2000.0000
+=================================================================================================
+count=921942, ns=1084
+```
+
 
 ---
 ---
@@ -762,6 +973,15 @@ Submit issues to: [SAMD_PWM issues](https://github.com/khoih-prog/SAMD_PWM/issue
 - [Industruino SAMD core](https://github.com/Industruino/IndustruinoSAMD)
 - [Industruino SAMx core](https://github.com/Industruino/IndustruinoSAMx)
  2. Add example [PWM_StepperControl](https://github.com/khoih-prog/SAMD_PWM/tree/main/examples/PWM_StepperControl) to demo how to control Stepper Motor using PWM
+ 3. Add example [PWM_manual](https://github.com/khoih-prog/SAMD_PWM/tree/main/examples/PWM_manual) to demo how to correctly use PWM to generate waveform
+ 4. Add function `setPWM_DCPercentage_manual()` to facilitate the setting PWM DC manually by using DCPercentage, instead of absolute DCValue depending on varying PWMPeriod
+ 5. Optimize speed with new `setPWM_DCPercentageInt_manual` function to improve speed almost 500 times compared to `setPWM`
+ 6. Add example [PWM_SpeedTest](https://github.com/khoih-prog/SAMD_PWM/tree/main/examples/PWM_SpeedTest) to demo the better speed of new `setPWM_DCPercentageInt_manual` function
+ 7. **Breaking change**: Modify `setPWM_manual` function to take `16-bit` dutycycle instead from merely `0-100` for better accuracy
+ 8. Modify example [PWM_Waveform](https://github.com/khoih-prog/SAMD_PWM/tree/main/examples/PWM_Waveform) to adapt to breaking change of `setPWM_manual` function
+ 9. Improve `README.md` so that links can be used in other sites, such as `PIO`
+
+
  
 ---
 ---
